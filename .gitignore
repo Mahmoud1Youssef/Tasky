@@ -1,0 +1,61 @@
+# Miscellaneous & OS
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+Desktop.ini
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+
+# IDEs & Editors
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Secrets & Local Configs
+.env
+.env.*
+local.properties
+android/local.properties
+key.properties
+*.keystore
+*.jks
+
+# Flutter / Dart / Pub
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Android
+android/.gradle/
+android/app/debug
+android/app/profile
+android/app/release
+android/.cxx/
+android/captures/
+
+# iOS
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flssnap
+**/ios/Flutter/ephemeral/
+**/ios/Runner.gitignore
+**/ios/Runner.generated.xcconfig
+**/Pods/
+
+# Symbols & Preview
+app.*.symbols
+app.*.map.json
+.widget_preview/
