@@ -162,18 +162,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     Divider(thickness: 1),
                     ListTile(
-                      onTap: () async {
-                        PreferencesManager().remove('username');
-                        PreferencesManager().remove('motivationQuote');
-                        PreferencesManager().remove('tasks');
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return WelcomeScreen();
-                            },
-                          ),
-                          (Route<dynamic> route) => false,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Log Out"),
+                              content: Text("Are you sure you want to log out"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    PreferencesManager().remove('username');
+                                    PreferencesManager().remove(
+                                      'motivationQuote',
+                                    );
+                                    PreferencesManager().remove('tasks');
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return WelcomeScreen();
+                                        },
+                                      ),
+                                      (Route<dynamic> route) => false,
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                  ),
+                                  child: Text("Log Out"),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
                       // visualDensity: VisualDensity.compact,
