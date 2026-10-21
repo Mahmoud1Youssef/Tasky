@@ -17,6 +17,34 @@ class TaskItemWidget extends StatelessWidget {
   final Function(bool?) onChanged;
   final Function(int) onDelete;
 
+  void _showAlertDialog(context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete Task"),
+          content: Text("Are you sure you to delete this task?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                onDelete(model.id);
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,35 +103,8 @@ class TaskItemWidget extends StatelessWidget {
                 case TaskItemActionsEnum.markAsDone:
                   onChanged(!model.isDone);
                 case TaskItemActionsEnum.edit:
-
                 case TaskItemActionsEnum.delete:
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Delete Task"),
-                        content: Text("Are you sure you to delete this task?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text("Cancel"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              onDelete(model.id);
-                              Navigator.pop(context);
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.red,
-                            ),
-                            child: Text("Delete"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  _showAlertDialog(context);
               }
             },
             itemBuilder: (context) => TaskItemActionsEnum.values.map((e) {
