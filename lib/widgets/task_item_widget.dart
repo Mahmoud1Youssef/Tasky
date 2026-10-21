@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/core/enums/task_item_actions_enum.dart';
 import 'package:tasky/core/theme/theme_controller.dart';
@@ -76,9 +75,35 @@ class TaskItemWidget extends StatelessWidget {
                 case TaskItemActionsEnum.markAsDone:
                   onChanged(!model.isDone);
                 case TaskItemActionsEnum.edit:
-                  print(value.name);
+
                 case TaskItemActionsEnum.delete:
-                  onDelete(model.id);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Delete Task"),
+                        content: Text("Are you sure to delete this task?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              onDelete(model.id);
+                              Navigator.pop(context);
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                            child: Text("Delete"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
               }
             },
             itemBuilder: (context) => TaskItemActionsEnum.values.map((e) {
