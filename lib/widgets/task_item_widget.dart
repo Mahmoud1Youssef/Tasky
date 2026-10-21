@@ -82,7 +82,7 @@ class TaskItemWidget extends StatelessWidget {
                     builder: (context) {
                       return AlertDialog(
                         title: Text("Delete Task"),
-                        content: Text("Are you sure to delete this task?"),
+                        content: Text("Are you sure you to delete this task?"),
                         actions: [
                           TextButton(
                             onPressed: () {
