@@ -49,6 +49,9 @@ ThemeData lightTheme = ThemeData(
       ),
     ),
   ),
+  textButtonTheme: TextButtonThemeData(
+    style: ButtonStyle(foregroundColor: WidgetStateProperty.all(Colors.black)),
+  ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Color(0xFF15B86C),
     foregroundColor: Color(0xFFFFFCFC),
@@ -146,11 +149,13 @@ ThemeData lightTheme = ThemeData(
   popupMenuTheme: PopupMenuThemeData(
     color: Color(0xFFF6F7F9),
     elevation: 2,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     labelTextStyle: WidgetStateProperty.all(
-      TextStyle(color:Color(0xFF161F1B),fontSize: 18, fontWeight: FontWeight(400)),
+      TextStyle(
+        color: Color(0xFF161F1B),
+        fontSize: 18,
+        fontWeight: FontWeight(400),
+      ),
     ),
   ),
 );
