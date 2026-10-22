@@ -50,6 +50,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         controller: userNameController,
                         title: "User Name",
                         hintText: "Enter Your Name",
+                        maxLines: 1,
                         validator: (String? value) {
                           if (value == null || value.trim().isEmpty) {
                             return "Please Enter Your Name";
