@@ -34,55 +34,52 @@ class _AddTaskState extends State<AddTaskScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomTextFormField(
+                      controller: taskNameController,
+                      title: "Task Name",
+                      hintText: "Finish UI design for login screen",
+                      maxLines: 1,
+                      validator: (String? value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please Write Task Name";
+                        }
+                        return null;
+                      },
+                    ),
+
+                    SizedBox(height: 20),
+                    CustomTextFormField(
+                      controller: taskDescriptionController,
+                      title: "Task Description",
+                      hintText:
+                          "Finish onboarding UI and hand off to devs by Thursday.",
+                      maxLines: 5,
+                    ),
+
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CustomTextFormField(
-                          controller: taskNameController,
-                          title: "Task Name",
-                          hintText: "Finish UI design for login screen",
-                          validator: (String? value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return "Please Write Task Name";
-                            }
-                            return null;
+                        Text(
+                          "High Priority",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Switch(
+                          value: isHighPriority,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isHighPriority = value;
+                            });
                           },
-                        ),
-
-                        SizedBox(height: 20),
-                        CustomTextFormField(
-                          controller: taskDescriptionController,
-                          title: "Task Description",
-                          hintText:
-                              "Finish onboarding UI and hand off to devs by Thursday.",
-                          maxLines: 5,
-                        ),
-
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "High Priority",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Switch(
-                              value: isHighPriority,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  isHighPriority = value;
-                                });
-                              },
-                            ),
-                          ],
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(height: 40),
+                Spacer(),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(MediaQuery.of(context).size.width, 40),

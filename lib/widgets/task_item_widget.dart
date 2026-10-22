@@ -62,125 +62,118 @@ class TaskItemWidget extends StatelessWidget {
     GlobalKey<FormState> key = GlobalKey<FormState>();
     return showModalBottomSheet<bool>(
       context: context,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (context) {
-        return SafeArea(
-          child: StatefulBuilder(
-            builder:
-                (
-                  BuildContext context,
-                  void Function(void Function()) setState,
-                ) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Form(
-                      key: key,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomTextFormField(
-                                    controller: taskNameController,
-                                    title: "Task Name",
-                                    hintText:
-                                        "Finish UI design for login screen",
-                                    validator: (String? value) {
-                                      if (value == null ||
-                                          value.trim().isEmpty) {
-                                        return "Please Write Task Name";
-                                      }
-                                      return null;
-                                    },
-                                  ),
+        return StatefulBuilder(
+          builder:
+              (
+                BuildContext context,
+                void Function(void Function()) setState,
+              ) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Form(
+                    key: key,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 18),
+                        CustomTextFormField(
+                          controller: taskNameController,
+                          title: "Task Name",
+                          hintText:
+                              "Finish UI design for login screen",
+                          maxLines: 1,
+                          validator: (String? value) {
+                            if (value == null ||
+                                value.trim().isEmpty) {
+                              return "Please Write Task Name";
+                            }
+                            return null;
+                          },
+                        ),
 
-                                  SizedBox(height: 20),
-                                  CustomTextFormField(
-                                    controller: taskDescriptionController,
-                                    title: "Task Description",
-                                    hintText:
-                                        "Finish onboarding UI and hand off to devs by Thursday.",
-                                    maxLines: 5,
-                                  ),
+                        SizedBox(height: 20),
+                        CustomTextFormField(
+                          controller: taskDescriptionController,
+                          title: "Task Description",
+                          hintText:
+                              "Finish onboarding UI and hand off to devs by Thursday.",
+                          maxLines: 5,
+                        ),
 
-                                  SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "High Priority",
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.titleMedium,
-                                      ),
-                                      Switch(
-                                        value: isHighPriority,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isHighPriority = value;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "High Priority",
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium,
+                            ),
+                            Switch(
+                              value: isHighPriority,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  isHighPriority = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(
+                              MediaQuery.of(context).size.width,
+                              40,
                             ),
                           ),
-                          SizedBox(height: 40),
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(
-                                MediaQuery.of(context).size.width,
-                                40,
-                              ),
-                            ),
-                            icon: Icon(Icons.edit),
-                            label: Text("Edit Task"),
-                            onPressed: () async {
-                              if (key.currentState?.validate() ?? false) {
-                                final taskJson = PreferencesManager().getString(
-                                  'tasks',
-                                );
+                          icon: Icon(Icons.edit),
+                          label: Text("Edit Task"),
+                          onPressed: () async {
+                            if (key.currentState?.validate() ?? false) {
+                              final taskJson = PreferencesManager().getString(
+                                'tasks',
+                              );
 
-                                List<dynamic> listTasks = [];
-                                if (taskJson != null) {
-                                  listTasks = jsonDecode(taskJson);
-                                }
-                                TaskModel editModel = TaskModel(
-                                  id: model.id,
-                                  taskName: taskNameController.text,
-                                  taskDescription:
-                                      taskDescriptionController.text,
-                                  isHighPriority: isHighPriority,
-                                  isDone: model.isDone,
-                                );
-
-                                final item = listTasks.firstWhere(
-                                  (e) => e["id"] == model.id,
-                                );
-                                final int index = listTasks.indexOf(item);
-                                listTasks[index] = editModel;
-
-                                final taskEncode = jsonEncode(listTasks);
-                                await PreferencesManager().setString(
-                                  'tasks',
-                                  taskEncode,
-                                );
-                                Navigator.pop(context, true);
-                                // }
+                              List<dynamic> listTasks = [];
+                              if (taskJson != null) {
+                                listTasks = jsonDecode(taskJson);
                               }
-                            },
-                          ),
-                        ],
-                      ),
+                              TaskModel editModel = TaskModel(
+                                id: model.id,
+                                taskName: taskNameController.text,
+                                taskDescription:
+                                    taskDescriptionController.text,
+                                isHighPriority: isHighPriority,
+                                isDone: model.isDone,
+                              );
+
+                              final item = listTasks.firstWhere(
+                                (e) => e["id"] == model.id,
+                              );
+                              final int index = listTasks.indexOf(item);
+                              listTasks[index] = editModel;
+
+                              final taskEncode = jsonEncode(listTasks);
+                              await PreferencesManager().setString(
+                                'tasks',
+                                taskEncode,
+                              );
+                              Navigator.pop(context, true);
+                              // }
+                            }
+                          },
+                        ),
+                        SizedBox(height: 18),
+                      ],
                     ),
-                  );
-                },
-          ),
+                  ),
+                );
+              },
         );
       },
     );
