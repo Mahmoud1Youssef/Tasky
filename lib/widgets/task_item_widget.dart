@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:tasky/core/enums/task_item_actions_enum.dart';
 import 'package:tasky/core/theme/theme_controller.dart';
 import 'package:tasky/models/task_model.dart';
 
+import '../core/services/preferences_manager.dart';
 import '../core/widgets/custom_check_box.dart';
+import '../core/widgets/custom_text_form_field.dart';
 
 class TaskItemWidget extends StatelessWidget {
   const TaskItemWidget({
@@ -11,14 +15,16 @@ class TaskItemWidget extends StatelessWidget {
     required this.model,
     required this.onChanged,
     required this.onDelete,
+    required this.onEdit,
   });
 
   final TaskModel model;
   final Function(bool?) onChanged;
   final Function(int) onDelete;
+  final Function() onEdit;
 
-  void _showAlertDialog(context) {
-    showDialog(
+  Future<String?> _showAlertDialog(dynamic context) {
+    return showDialog<String>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -40,6 +46,141 @@ class TaskItemWidget extends StatelessWidget {
               child: Text("Delete"),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<bool?> _showBottomSheet(BuildContext context, TaskModel model) {
+    TextEditingController taskNameController = TextEditingController(
+      text: model.taskName,
+    );
+    TextEditingController taskDescriptionController = TextEditingController(
+      text: model.taskDescription,
+    );
+    bool isHighPriority = model.isHighPriority;
+    GlobalKey<FormState> key = GlobalKey<FormState>();
+    return showModalBottomSheet<bool>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: StatefulBuilder(
+            builder:
+                (
+                  BuildContext context,
+                  void Function(void Function()) setState,
+                ) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Form(
+                      key: key,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextFormField(
+                                    controller: taskNameController,
+                                    title: "Task Name",
+                                    hintText:
+                                        "Finish UI design for login screen",
+                                    validator: (String? value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return "Please Write Task Name";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+
+                                  SizedBox(height: 20),
+                                  CustomTextFormField(
+                                    controller: taskDescriptionController,
+                                    title: "Task Description",
+                                    hintText:
+                                        "Finish onboarding UI and hand off to devs by Thursday.",
+                                    maxLines: 5,
+                                  ),
+
+                                  SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "High Priority",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.titleMedium,
+                                      ),
+                                      Switch(
+                                        value: isHighPriority,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            isHighPriority = value;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 40),
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(
+                                MediaQuery.of(context).size.width,
+                                40,
+                              ),
+                            ),
+                            icon: Icon(Icons.edit),
+                            label: Text("Edit Task"),
+                            onPressed: () async {
+                              if (key.currentState?.validate() ?? false) {
+                                final taskJson = PreferencesManager().getString(
+                                  'tasks',
+                                );
+
+                                List<dynamic> listTasks = [];
+                                if (taskJson != null) {
+                                  listTasks = jsonDecode(taskJson);
+                                }
+                                TaskModel editModel = TaskModel(
+                                  id: model.id,
+                                  taskName: taskNameController.text,
+                                  taskDescription:
+                                      taskDescriptionController.text,
+                                  isHighPriority: isHighPriority,
+                                  isDone: model.isDone,
+                                );
+
+                                final item = listTasks.firstWhere(
+                                  (e) => e["id"] == model.id,
+                                );
+                                final int index = listTasks.indexOf(item);
+                                listTasks[index] = editModel;
+
+                                final taskEncode = jsonEncode(listTasks);
+                                await PreferencesManager().setString(
+                                  'tasks',
+                                  taskEncode,
+                                );
+                                Navigator.pop(context, true);
+                                // }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+          ),
         );
       },
     );
@@ -98,11 +239,15 @@ class TaskItemWidget extends StatelessWidget {
                   ? (model.isDone ? Color(0xFFA0A0A0) : Color(0xFFC6C6C6))
                   : (model.isDone ? Color(0xFF6A6A6A) : Color(0xFF3A4640)),
             ),
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case TaskItemActionsEnum.markAsDone:
                   onChanged(!model.isDone);
                 case TaskItemActionsEnum.edit:
+                  final result = await _showBottomSheet(context, model);
+                  if (result == true) {
+                    onEdit();
+                  }
                 case TaskItemActionsEnum.delete:
                   _showAlertDialog(context);
               }

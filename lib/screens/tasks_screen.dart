@@ -106,6 +106,7 @@ class _TasksScreenState extends State<TasksScreen> {
               onDelete: (int id) {
                 _deleteTask(id);
               },
+              onEdit: () => _loadTask(),
             ),
           ),
         ),

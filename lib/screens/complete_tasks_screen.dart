@@ -105,6 +105,7 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
               onDelete: (int id) {
                 _deleteTask(id);
               },
+              onEdit: () => _loadTask(),
             ),
           ),
         ),
