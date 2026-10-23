@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tasky/core/services/preferences_manager.dart'
     show PreferencesManager;
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? username;
   String? motivationQuote;
+  String? userImagePath;
   List<TaskModel> tasks = [];
   bool isLoading = false;
   int totalTasks = 0;
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       motivationQuote =
           PreferencesManager().getString('motivationQuote') ??
           "One task at a time.One step closer.";
+      userImagePath = PreferencesManager().getString('user_image');
     });
   }
 
@@ -101,9 +104,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage(
-                          'assets/images/profile.png',
-                        ),
+                        backgroundImage: userImagePath == null
+                            ? AssetImage('assets/images/img.png')
+                            : FileImage(File(userImagePath!)),
                       ),
                       SizedBox(width: 8),
                       Column(
