@@ -44,36 +44,39 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             child: Column(
               children: [
                 Expanded(
-                  child: Column(
-                    children: [
-                      CustomTextFormField(
-                        controller: userNameController,
-                        title: "User Name",
-                        hintText: "Enter Your Name",
-                        maxLines: 1,
-                        validator: (String? value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Please Enter Your Name";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      CustomTextFormField(
-                        controller: motivationQuoteController,
-                        title: "Motivation Quote",
-                        hintText: "One task at a time. One step closer.",
-                        maxLines: 5,
-                        validator: (String? value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Please Write Your Motivation Quote";
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CustomTextFormField(
+                          controller: userNameController,
+                          title: "User Name",
+                          hintText: "Enter Your Name",
+                          maxLines: 1,
+                          validator: (String? value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Please Enter Your Name";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        CustomTextFormField(
+                          controller: motivationQuoteController,
+                          title: "Motivation Quote",
+                          hintText: "One task at a time. One step closer.",
+                          maxLines: 5,
+                          validator: (String? value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Please Write Your Motivation Quote";
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(MediaQuery.of(context).size.width, 40),
