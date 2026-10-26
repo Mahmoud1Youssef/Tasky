@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme/theme_controller.dart';
+import '../theme/theme_controller.dart';
 
 class BuildEmptyStateWidget extends StatelessWidget {
   const BuildEmptyStateWidget({

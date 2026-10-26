@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/models/task_model.dart';
-import 'package:tasky/widgets/build_empty_state_widget.dart';
-import 'package:tasky/widgets/task_item_widget.dart';
+import 'package:tasky/core/components/build_empty_state_widget.dart';
+import 'package:tasky/core/components/task_item_widget.dart';
 
 class TaskListWidget extends StatelessWidget {
   const TaskListWidget({
