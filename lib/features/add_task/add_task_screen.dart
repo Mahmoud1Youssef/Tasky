@@ -5,6 +5,8 @@ import 'package:tasky/core/services/preferences_manager.dart';
 import 'package:tasky/core/widgets/custom_text_form_field.dart';
 import 'package:tasky/models/task_model.dart';
 
+import '../../core/constants/storage_key.dart';
+
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
 
@@ -91,7 +93,7 @@ class _AddTaskState extends State<AddTaskScreen> {
                   label: Text("Add Task"),
                   onPressed: () async {
                     if (_key.currentState?.validate() ?? false) {
-                      final taskJson = PreferencesManager().getString('tasks');
+                      final taskJson = PreferencesManager().getString(StorageKey.tasks);
 
                       List<dynamic> listTasks = [];
                       if (taskJson != null) {
@@ -107,7 +109,7 @@ class _AddTaskState extends State<AddTaskScreen> {
                       listTasks.add(model.toJson());
 
                       final taskEncode = jsonEncode(listTasks);
-                      await PreferencesManager().setString('tasks', taskEncode);
+                      await PreferencesManager().setString(StorageKey.tasks, taskEncode);
                       Navigator.of(context).pop(true);
                     }
                   },

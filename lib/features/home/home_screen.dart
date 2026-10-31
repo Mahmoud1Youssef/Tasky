@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:tasky/core/constants/storage_key.dart';
 import 'package:tasky/core/services/preferences_manager.dart'
     show PreferencesManager;
 import 'package:tasky/core/widgets/custom_svg_picture.dart';
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
 
-    final finalTAsk = PreferencesManager().getString('tasks');
+    final finalTAsk = PreferencesManager().getString(StorageKey.tasks);
     if (finalTAsk != null) {
       final taskAfterDecode = jsonDecode(finalTAsk) as List<dynamic>;
       setState(() {
@@ -56,11 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadUserData() async {
     setState(() {
-      username = PreferencesManager().getString('username');
+      username = PreferencesManager().getString(StorageKey.username);
       motivationQuote =
-          PreferencesManager().getString('motivationQuote') ??
+          PreferencesManager().getString(StorageKey.motivationQuote) ??
           "One task at a time.One step closer.";
-      userImagePath = PreferencesManager().getString('user_image');
+      userImagePath = PreferencesManager().getString(StorageKey.userImage);
     });
   }
 
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PreferencesManager().setString('tasks', jsonEncode(updatedTask));
+    PreferencesManager().setString(StorageKey.tasks, jsonEncode(updatedTask));
   }
 
   void _deleteTask(int? id) async {
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _calculatePercent();
     });
     final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PreferencesManager().setString('tasks', jsonEncode(updatedTask));
+    PreferencesManager().setString(StorageKey.tasks, jsonEncode(updatedTask));
   }
 
   @override

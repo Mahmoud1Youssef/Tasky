@@ -5,6 +5,7 @@ import 'package:tasky/core/enums/task_item_actions_enum.dart';
 import 'package:tasky/core/theme/theme_controller.dart';
 import 'package:tasky/models/task_model.dart';
 
+import '../constants/storage_key.dart';
 import '../services/preferences_manager.dart';
 import '../widgets/custom_check_box.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -136,7 +137,7 @@ class TaskItemWidget extends StatelessWidget {
                             onPressed: () async {
                               if (key.currentState?.validate() ?? false) {
                                 final taskJson = PreferencesManager().getString(
-                                  'tasks',
+                                  StorageKey.tasks,
                                 );
 
                                 List<dynamic> listTasks = [];
@@ -160,7 +161,7 @@ class TaskItemWidget extends StatelessWidget {
 
                                 final taskEncode = jsonEncode(listTasks);
                                 await PreferencesManager().setString(
-                                  'tasks',
+                                  StorageKey.tasks,
                                   taskEncode,
                                 );
                                 Navigator.pop(context, true);
