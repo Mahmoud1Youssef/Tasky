@@ -96,7 +96,7 @@ class HighPriorityTasksWidget extends StatelessWidget {
                           },
                         ),
                       );
-                      controller.totalTasks;
+                      controller.loadTask();
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(
