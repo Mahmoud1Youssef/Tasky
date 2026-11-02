@@ -8,60 +8,55 @@ class TodoTasksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TasksController>(
-      create: (_) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
+    final controller = context.read<TasksController>();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(18),
-              child: Text(
-                "To Do Tasks",
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: controller.isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFFFFCFC),
-                          backgroundColor: Color(0xFF15B86C),
-                          strokeWidth: 3,
-                        ),
-                      )
-                    : Consumer<TasksController>(
-                        builder: (BuildContext context, value, Widget? child) {
-                          return TaskListWidget(
-                            tasks: value.todoTasks,
-                            primaryEmptyMessage: "No Pending Tasks",
-                            secondEmptyMessage:
-                                "You're all set! Add new tasks whenever you're ready.",
-                            onTap: (value, index) async {
-                              controller.doneTask(
-                                value,
-                                index,
-                                controller.todoTasks,
-                              );
-                            },
-                            onDelete: (int id) {
-                              controller.deleteTask(id, controller.todoTasks);
-                            },
-                            onEdit: () {
-                              controller.init();
-                            },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(18),
+          child: Text(
+            "To Do Tasks",
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: controller.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFFFFCFC),
+                      backgroundColor: Color(0xFF15B86C),
+                      strokeWidth: 3,
+                    ),
+                  )
+                : Consumer<TasksController>(
+                    builder: (BuildContext context, value, Widget? child) {
+                      return TaskListWidget(
+                        tasks: value.todoTasks,
+                        primaryEmptyMessage: "No Pending Tasks",
+                        secondEmptyMessage:
+                            "You're all set! Add new tasks whenever you're ready.",
+                        onTap: (value, index) async {
+                          controller.doneTask(
+                            value,
+                            index,
+                            controller.todoTasks,
                           );
                         },
-                      ),
-              ),
-            ),
-          ],
-        );
-      },
+                        onDelete: (int id) {
+                          controller.deleteTask(id, controller.todoTasks);
+                        },
+                        onEdit: () {
+                          controller.init();
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ),
+      ],
     );
   }
 }

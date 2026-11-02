@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:tasky/core/widgets/custom_check_box.dart';
-import 'package:tasky/features/home/home_controller.dart';
 import '../../../core/theme/theme_controller.dart';
+import '../../tasks/controllers/tasks_controller.dart';
 import '../../tasks/high_priority_screen.dart';
 
 class HighPriorityTasksWidget extends StatelessWidget {
@@ -11,9 +11,9 @@ class HighPriorityTasksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeController>(
+    return Consumer<TasksController>(
       builder:
-          (BuildContext context, HomeController controller, Widget? child) {
+          (BuildContext context, TasksController controller, Widget? child) {
             final tasksList = controller.tasks;
 
             return Container(
@@ -62,7 +62,11 @@ class HighPriorityTasksWidget extends StatelessWidget {
                                         final index = tasksList.indexWhere(
                                           (e) => e.id == element.id,
                                         );
-                                        controller.doneTask(value, index);
+                                        controller.doneTask(
+                                          value,
+                                          index,
+                                          controller.highPriorityTasks,
+                                        );
                                       },
                                     ),
                                     SizedBox(width: 8),
@@ -96,7 +100,7 @@ class HighPriorityTasksWidget extends StatelessWidget {
                           },
                         ),
                       );
-                      controller.loadTask();
+                      controller.init();
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(

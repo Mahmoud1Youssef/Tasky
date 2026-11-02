@@ -7,6 +7,9 @@ import '../../../core/services/preferences_manager.dart';
 import '../../../models/task_model.dart';
 
 class TasksController with ChangeNotifier {
+  int totalTasks = 0;
+  int totalDoneTasks = 0;
+  double percent = 0;
   bool isLoading = false;
 
   List<TaskModel> tasks = [];
@@ -31,10 +34,11 @@ class TasksController with ChangeNotifier {
       todoTasks = tasks.where((element) => element.isDone == false).toList();
       completeTasks = tasks.where((element) => element.isDone).toList();
       highPriorityTasks = tasks
-        .where((element) => element.isHighPriority).toList();
+          .where((element) => element.isHighPriority)
+          .toList();
       highPriorityTasks = highPriorityTasks.reversed.toList();
     }
-
+    calculatePercent();
     isLoading = false;
     notifyListeners();
   }
@@ -42,6 +46,8 @@ class TasksController with ChangeNotifier {
   void doneTask(bool? value, int? index, List? task) async {
     if (index == null) return;
     task?[index].isDone = value ?? false;
+
+    calculatePercent();
 
     final int newIndex = tasks.indexWhere((e) => e.id == task?[index].id);
     tasks[newIndex] = task?[index];
@@ -62,6 +68,15 @@ class TasksController with ChangeNotifier {
       StorageKey.tasks,
       jsonEncode(updatedTask),
     );
+    calculatePercent();
+
+    notifyListeners();
+  }
+
+  void calculatePercent() {
+    totalTasks = tasks.length;
+    totalDoneTasks = tasks.where((e) => e.isDone).length;
+    percent = totalTasks == 0 ? 0 : totalDoneTasks / totalTasks;
     notifyListeners();
   }
 }
