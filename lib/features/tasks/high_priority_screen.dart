@@ -23,21 +23,22 @@ class HighPriorityScreen extends StatelessWidget {
                 ),
               )
             : Consumer<TasksController>(
-                builder: (BuildContext context, value, Widget? child) {
+                builder: (BuildContext context, TasksController tasksState, Widget? child) {
                   return TaskListWidget(
-                    tasks: value.highPriorityTasks,
+                    tasks: tasksState.highPriorityTasks,
                     primaryEmptyMessage: "No Pending Tasks",
                     secondEmptyMessage:
                         "You're all set! Add new tasks whenever you're ready.",
-                    onTap: (value, index) async {
-                      controller.doneTask(
-                        value,
-                        index,
-                        controller.highPriorityTasks,
-                      );
+                    onTap: (val, index) async {
+                      if (index != null) {
+                        controller.doneTask(
+                          val,
+                          tasksState.highPriorityTasks[index].id,
+                        );
+                      }
                     },
                     onDelete: (int id) {
-                      controller.deleteTask(id, controller.highPriorityTasks);
+                      controller.deleteTask(id);
                     },
                     onEdit: () {
                       controller.init();

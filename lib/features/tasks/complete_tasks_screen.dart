@@ -32,21 +32,22 @@ class CompleteTasksScreen extends StatelessWidget {
                     ),
                   )
                 : Consumer<TasksController>(
-                    builder: (BuildContext context, value, Widget? child) {
+                    builder: (BuildContext context, TasksController tasksState, Widget? child) {
                       return TaskListWidget(
-                        tasks: value.completeTasks,
+                        tasks: tasksState.completeTasks,
                         primaryEmptyMessage: "No Completed Tasks Yet",
                         secondEmptyMessage:
                             "Tasks you check off will appear here.",
-                        onTap: (value, index) async {
-                          context.read<TasksController>().doneTask(
-                            value,
-                            index,
-                            controller.completeTasks,
-                          );
+                        onTap: (val, index) async {
+                          if (index != null) {
+                            controller.doneTask(
+                              val,
+                              tasksState.completeTasks[index].id,
+                            );
+                          }
                         },
                         onDelete: (int id) {
-                          controller.deleteTask(id, controller.completeTasks);
+                          controller.deleteTask(id);
                         },
                         onEdit: () {
                           controller.init();

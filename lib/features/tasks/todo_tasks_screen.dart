@@ -32,21 +32,22 @@ class TodoTasksScreen extends StatelessWidget {
                     ),
                   )
                 : Consumer<TasksController>(
-                    builder: (BuildContext context, value, Widget? child) {
+                    builder: (BuildContext context, TasksController tasksState, Widget? child) {
                       return TaskListWidget(
-                        tasks: value.todoTasks,
+                        tasks: tasksState.todoTasks,
                         primaryEmptyMessage: "No Pending Tasks",
                         secondEmptyMessage:
                             "You're all set! Add new tasks whenever you're ready.",
-                        onTap: (value, index) async {
-                          controller.doneTask(
-                            value,
-                            index,
-                            controller.todoTasks,
-                          );
+                        onTap: (val, index) async {
+                          if (index != null) {
+                            controller.doneTask(
+                              val,
+                              tasksState.todoTasks[index].id,
+                            );
+                          }
                         },
                         onDelete: (int id) {
-                          controller.deleteTask(id, controller.todoTasks);
+                          controller.deleteTask(id);
                         },
                         onEdit: () {
                           controller.init();

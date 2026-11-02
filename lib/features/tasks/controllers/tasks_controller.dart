@@ -31,45 +31,51 @@ class TasksController with ChangeNotifier {
       tasks = taskAfterDecode
           .map((element) => TaskModel.fromJson(element))
           .toList();
-      todoTasks = tasks.where((element) => element.isDone == false).toList();
-      completeTasks = tasks.where((element) => element.isDone).toList();
-      highPriorityTasks = tasks
-          .where((element) => element.isHighPriority)
-          .toList();
-      highPriorityTasks = highPriorityTasks.reversed.toList();
+      _loadData();
+      calculatePercent();
     }
-    calculatePercent();
     isLoading = false;
     notifyListeners();
   }
 
-  void doneTask(bool? value, int? index, List? task) async {
-    if (index == null) return;
-    task?[index].isDone = value ?? false;
-
-    calculatePercent();
-
-    final int newIndex = tasks.indexWhere((e) => e.id == task?[index].id);
-    tasks[newIndex] = task?[index];
-    await PreferencesManager().setString(StorageKey.tasks, jsonEncode(tasks));
-    _loadTasks();
-    notifyListeners();
+  void _loadData() {
+    todoTasks = tasks.where((element) => element.isDone == false).toList();
+    completeTasks = tasks.where((element) => element.isDone).toList();
+    highPriorityTasks = tasks
+        .where((element) => element.isHighPriority)
+        .toList();
+    highPriorityTasks = highPriorityTasks.reversed.toList();
   }
 
-  void deleteTask(int? id, List? task) async {
+  void doneTask(bool? value, int? id) async {
     if (id == null) return;
+    final index = tasks.indexWhere((e) => e.id == id);
+    if (index == -1) return;
 
-    tasks.removeWhere((e) => e.id == id);
-
-    task?.removeWhere((task) => task.id == id);
+    tasks[index].isDone = value ?? false;
+    _loadData();
+    calculatePercent();
 
     final updatedTask = tasks.map((element) => element.toJson()).toList();
     await PreferencesManager().setString(
       StorageKey.tasks,
       jsonEncode(updatedTask),
     );
+    notifyListeners();
+  }
+
+  void deleteTask(int? id) async {
+    if (id == null) return;
+
+    tasks.removeWhere((e) => e.id == id);
+    _loadData();
     calculatePercent();
 
+    final updatedTask = tasks.map((element) => element.toJson()).toList();
+    await PreferencesManager().setString(
+      StorageKey.tasks,
+      jsonEncode(updatedTask),
+    );
     notifyListeners();
   }
 
@@ -77,6 +83,5 @@ class TasksController with ChangeNotifier {
     totalTasks = tasks.length;
     totalDoneTasks = tasks.where((e) => e.isDone).length;
     percent = totalTasks == 0 ? 0 : totalDoneTasks / totalTasks;
-    notifyListeners();
   }
 }
